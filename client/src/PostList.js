@@ -5,14 +5,17 @@ import CommentList from './CommentList';
 
 const PostList = () => {
   const [posts, setPosts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get('http://localhost:4000/posts');
+      const res = await axios.get('http://localhost:4002/posts');
       setPosts(res.data);
     } catch (error) {
-      console.error('Error fetching posts:', error);
+      console.error('Error fetching posts:', error.message);
       alert('Failed to fetch posts. Please check the console for more details.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -24,7 +27,7 @@ const PostList = () => {
     <div className="card" style={{ width: '30%', marginBottom: '20px', backgroundColor: '#c4bcb3' }} key={post.id}>
       <div className="card-body">
         <h3>{post.title}</h3>
-        <CommentList postId={post.id} />
+        <CommentList Comments ={post.Comments} />
         <CommentCreate postId={post.id} />
       </div>
     </div>
@@ -33,7 +36,11 @@ const PostList = () => {
   return (
     <div style={{ backgroundColor: '#343026', borderRadius: '10px', padding: '20px' }}>
       <h1 style={{ color: '#ffffff', marginBottom: '20px' }}>Posts</h1>
-      <div className="d-flex flex-row flex-wrap justify-content-between">{renderedPosts}</div>
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="d-flex flex-row flex-wrap justify-content-between">{renderedPosts}</div>
+      )}
     </div>
   );
 };

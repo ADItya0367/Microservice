@@ -7,32 +7,41 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 
-// now we will implement two different routes
+const posts = {};
 
-// 1. GET /api/query
+// Route to get all events (current state of posts)
+app.get('/posts', (req, res) => {
 
-app.get('/events', (req, res) => {
-    res.send(posts);
-}); 
+        res.send(posts);
+});
 
+// Route to handle events
 app.post('/events', (req, res) => {
-    const {type,data}= req.body;
-    if(type === 'postCreated'){
-        const {id,title} = data;
-        posts[id] = {id,title,comments:[]};
-        
+    const { type, data } = req.body;
+
+    console.log('Received Event:', type, data);
+
+    if (type === 'postCreated') {
+        const { id, title } = data;
+        posts[id] = { id, title, comments: [] };
     }
-    if(type === 'commentCreated'){
-        const {id,content,postId} = data;
+
+    if (type === 'commentCreated') {
+        const { id, content, postId } = data;
         const post = posts[postId];
-        post.comments.push({id,content});
+
+        if (!post) {
+            console.log(`Post with id ${postId} not found`);
+            return res.status(404).send({ error: 'Post not found' });
+        }
+
+        post.comments.push({ id, content });
     }
-    res.send({}); // send back an empty object
-}
-);
+    console.log(posts);
+    res.send({});
+});
 
 
 app.listen(4002, () => {
     console.log('Query service listening on port 4002');
 });
-// 2. POST /api/query
