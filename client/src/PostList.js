@@ -9,7 +9,7 @@ const PostList = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get('http://localhost:4002/posts');
+      const res = await axios.get('http://localhost:4000/posts');
       setPosts(res.data);
     } catch (error) {
       console.error('Error fetching posts:', error.message);
@@ -27,7 +27,7 @@ const PostList = () => {
     <div className="card" style={{ width: '30%', marginBottom: '20px', backgroundColor: '#c4bcb3' }} key={post.id}>
       <div className="card-body">
         <h3>{post.title}</h3>
-        <CommentList Comments ={post.Comments} />
+        <CommentList postId={post.id} />
         <CommentCreate postId={post.id} />
       </div>
     </div>

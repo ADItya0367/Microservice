@@ -27,7 +27,7 @@ app.post('/events', (req, res) => {
     }
 
     if (type === 'commentCreated') {
-        const { id, content, postId } = data;
+        const { id, content, postId ,status} = data;
         const post = posts[postId];
 
         if (!post) {
@@ -35,7 +35,7 @@ app.post('/events', (req, res) => {
             return res.status(404).send({ error: 'Post not found' });
         }
 
-        post.comments.push({ id, content });
+        post.comments.push({ id, content,status });
     }
     console.log(posts);
     res.send({});

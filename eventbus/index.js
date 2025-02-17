@@ -26,6 +26,12 @@ app.post('/events', async (req, res) => {
         console.error('Error posting to query service:', error.message);
     }
     
+    try {
+        await axios.post('http://localhost:4003/events', event); // query service
+    } catch (error) {
+        console.error('Error posting to query service:', error.message);
+    }
+    
     res.send({ status: 'everything is fine !!' });
 });
 
